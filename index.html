@@ -3,200 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tablero Económico Estable</title>
+    <title>Monitor Económico Integral - Zona Sur</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <style>
-        body { font-family: -apple-system, system-ui, sans-serif; background-color: #f3f4f6; }
-        /* Corrección crítica: asegurar que los contenedores de gráficos no desborden */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden; /* Evita que el gráfico empuje el layout */
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f1f5f9; color: #1e293b; }
+        
+        /* Contenedores Gráficos */
+        .card { background: white; border-radius: 0.75rem; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .chart-box { position: relative; height: 250px; width: 100%; overflow: hidden; }
+        
+        /* Mapa y Leyenda */
+        .map-container { height: 500px; width: 100%; border-radius: 0.5rem; z-index: 1; }
+        .legend {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 12px;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 11px;
+            line-height: 1.4;
+            max-height: 350px;
+            overflow-y: auto;
+            border: 1px solid #cbd5e1;
         }
+        .legend i { width: 10px; height: 10px; float: left; margin-right: 8px; opacity: 0.9; border-radius: 50%; margin-top: 3px; }
+        
+        /* Scrollbar fino */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-3 md:p-6 lg:p-8">
 
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto space-y-6">
         
-        <header class="bg-white rounded-lg shadow-sm p-6 mb-6 flex flex-col md:flex-row justify-between items-center border border-gray-200">
-            <div class="mb-4 md:mb-0 text-center md:text-left">
-                <h1 class="text-2xl font-bold text-gray-800">Tablero de Inteligencia Económica</h1>
-                <p class="text-gray-500 text-sm">Monitor de actividad empresarial DENUE</p>
+        <header class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-indigo-600 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <h1 class="text-2xl font-bold text-slate-800">Monitor Económico Integral</h1>
+                <p class="text-sm text-slate-500">Zona Sur-Oriente: La Misión, Los Pájaros, 6 de Junio</p>
             </div>
-            <div class="bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-md">
-                9,761 Unidades
+            <div class="text-right">
+                <div class="text-xs font-bold text-indigo-600 uppercase tracking-widest">Unidades Activas</div>
+                <div class="text-3xl font-bold text-slate-900">1,683</div>
             </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500">
-                <div class="text-gray-400 text-xs font-bold uppercase">Giro Principal</div>
-                <div class="text-xl font-bold text-gray-800">Abarrotes</div>
-                <div class="text-blue-600 text-xs mt-1">17% del mercado</div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="card border-t-4 border-indigo-500">
+                <div class="text-xs text-slate-400 font-bold uppercase">Colonia Top</div>
+                <div class="text-lg font-bold truncate">LA MISIÓN</div>
+                <div class="text-indigo-600 text-xs font-semibold">291 negocios</div>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
-                <div class="text-gray-400 text-xs font-bold uppercase">Tamaño</div>
-                <div class="text-xl font-bold text-gray-800">Micro (0-5)</div>
-                <div class="text-green-600 text-xs mt-1">88.4% predominancia</div>
+            <div class="card border-t-4 border-emerald-500">
+                <div class="text-xs text-slate-400 font-bold uppercase">Tamaño Dominante</div>
+                <div class="text-lg font-bold">Micro (0-5)</div>
+                <div class="text-emerald-600 text-xs font-semibold">91.7% del total</div>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-500">
-                <div class="text-gray-400 text-xs font-bold uppercase">Municipio</div>
-                <div class="text-xl font-bold text-gray-800">Tuxtla Gtz</div>
-                <div class="text-purple-600 text-xs mt-1">Zona Centro</div>
+            <div class="card border-t-4 border-amber-500">
+                <div class="text-xs text-slate-400 font-bold uppercase">Giro Principal</div>
+                <div class="text-lg font-bold">Abarrotes</div>
+                <div class="text-amber-600 text-xs font-semibold">26% del mercado</div>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-orange-500">
-                <div class="text-gray-400 text-xs font-bold uppercase">Actualización</div>
-                <div class="text-xl font-bold text-gray-800">2024</div>
-                <div class="text-orange-600 text-xs mt-1">Pico de registros</div>
+            <div class="card border-t-4 border-blue-500">
+                <div class="text-xs text-slate-400 font-bold uppercase">Pico Registro</div>
+                <div class="text-lg font-bold">2024</div>
+                <div class="text-blue-600 text-xs font-semibold">785 altas</div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <div class="bg-white p-5 rounded-lg shadow-sm lg:col-span-2 min-w-0">
-                <h3 class="font-bold text-gray-700 mb-4">Actividades Económicas (Top 10)</h3>
-                <div class="chart-container" style="height: 300px;">
-                    <canvas id="activitiesChart"></canvas>
+        <div class="card ring-1 ring-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-slate-700 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Distribución Geoespacial: Top 10 Actividades
+                </h2>
+                <span class="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded font-semibold border border-indigo-100">Mapa Interactivo</span>
+            </div>
+            <div id="map" class="map-container"></div>
+            <p class="text-xs text-slate-400 mt-2 text-center">Mostrando muestra representativa de puntos categorizados por color.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card">
+                <h3 class="font-bold text-slate-700 mb-4">Top 5 Colonias Comerciales</h3>
+                <div class="chart-box">
+                    <canvas id="coloniasChart"></canvas>
                 </div>
             </div>
-            
-            <div class="bg-white p-5 rounded-lg shadow-sm min-w-0">
-                <h3 class="font-bold text-gray-700 mb-4">Tamaño de Negocios</h3>
-                <div class="chart-container" style="height: 300px;">
-                    <canvas id="sizeChart"></canvas>
+            <div class="card">
+                <h3 class="font-bold text-slate-700 mb-4">Distribución por Sector</h3>
+                <div class="chart-box">
+                    <canvas id="sectorChart"></canvas>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-white p-5 rounded-lg shadow-sm lg:col-span-2 min-w-0">
-                <h3 class="font-bold text-gray-700 mb-4">Distribución Geográfica (Muestra)</h3>
-                <div id="map" style="height: 400px; width: 100%; border-radius: 0.5rem; z-index: 1;"></div>
+            <div class="card lg:col-span-2">
+                <h3 class="font-bold text-slate-700 mb-4">Top 10 Actividades (Detalle)</h3>
+                <div class="chart-box">
+                    <canvas id="activitiesChart"></canvas>
+                </div>
             </div>
-            
-            <div class="bg-white p-5 rounded-lg shadow-sm min-w-0">
-                <h3 class="font-bold text-gray-700 mb-4">Histórico</h3>
-                <div class="chart-container" style="height: 400px;">
-                    <canvas id="yearChart"></canvas>
+            <div class="card">
+                <h3 class="font-bold text-slate-700 mb-4">Tamaño de Empresa</h3>
+                <div class="chart-box">
+                    <canvas id="sizeChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <footer class="mt-8 text-center text-gray-400 text-xs">
-            Datos procesados del INEGI DENUE
+        <div class="card">
+            <h3 class="font-bold text-slate-700 mb-4">Evolución de Registros (Año de Alta)</h3>
+            <div class="chart-box">
+                <canvas id="yearChart"></canvas>
+            </div>
+        </div>
+
+        <footer class="text-center text-xs text-slate-400 mt-8 pb-4">
+            Generado con Inteligencia Artificial | Fuente: INEGI DENUE
         </footer>
+
     </div>
 
     <script>
-        // --- DATOS ESTÁTICOS ---
-        const data = {
-            activities: {"Abarrotes": 1656, "Belleza": 385, "Fruterías": 352, "Religiosas": 294, "Mecánica": 264, "Antojitos": 230, "Tacos/Tortas": 221, "Carne Aves": 181, "Comida Rápida": 176, "Alimentos": 175},
-            sizes: {"0-5 personas": 8629, "6-10 personas": 577, "11-30 personas": 379, "31-50 personas": 72, "51+ personas": 104},
-            years: {"2010": 1974, "2014": 1092, "2019": 2192, "2023": 79, "2024": 3907, "2025": 262},
-            points: [
-                {lat: 16.751, lng: -93.115, title: "Comercio"}, {lat: 16.737, lng: -93.045, title: "Autopartes"},
-                {lat: 16.730, lng: -93.038, title: "Alimentos"}, {lat: 16.735, lng: -93.111, title: "Carnicería"},
-                {lat: 16.751, lng: -93.056, title: "Depósito"}, {lat: 16.748, lng: -93.044, title: "Iglesia"},
-                {lat: 16.737, lng: -93.103, title: "Llantas"}, {lat: 16.744, lng: -93.081, title: "Escuela"},
-                {lat: 16.733, lng: -93.066, title: "Capilla"}, {lat: 16.748, lng: -93.089, title: "Automotriz"},
-                {lat: 16.750, lng: -93.096, title: "Farmacia"}, {lat: 16.745, lng: -93.075, title: "Burger King"},
-                {lat: 16.722, lng: -93.107, title: "Hospital"}, {lat: 16.753, lng: -93.064, title: "Abarrotes"},
-                {lat: 16.742, lng: -93.043, title: "Regalos"}, {lat: 16.740, lng: -93.093, title: "Empeño"},
-                {lat: 16.729, lng: -93.039, title: "Taller"}, {lat: 16.750, lng: -93.093, title: "Banco"},
-                {lat: 16.738, lng: -93.082, title: "Comedor"}, {lat: 16.742, lng: -93.061, title: "Papelería"}
-            ]
+        // --- 1. DATOS UNIFICADOS ---
+        const stats = {
+            colonias: {"LA MISION": 291, "LOS PAJAROS": 245, "6 DE JUNIO": 160, "RIVERA CERRO HUECO": 140, "AZTECA": 107},
+            sectores: {"Comercio Minorista": 791, "Servicios": 305, "Alimentos/Bebidas": 215, "Manufacturas": 46, "Otros": 326},
+            tamano: {"0-5 personas": 1544, "6-10 personas": 84, "11-30 personas": 40, "31+": 15},
+            historico: {"2010": 267, "2014": 205, "2019": 377, "2023": 10, "2024": 785},
+            // Nombres cortos para gráficas
+            actividadesLabels: ["Abarrotes", "Belleza", "Religiosas", "Comida Rápida", "Pollerías", "Mecánica", "Tacos/Tortas", "Tortillerías", "Antojitos", "Papelerías"],
+            actividadesData: [439, 76, 72, 48, 46, 42, 37, 37, 36, 35]
         };
 
-        // --- CONFIGURACIÓN SEGURA DE CHART.JS ---
-        // Desactivar animaciones de redimensionamiento excesivas
-        Chart.defaults.maintainAspectRatio = false; 
-        Chart.defaults.responsive = true;
-        Chart.defaults.font.family = '-apple-system, system-ui, sans-serif';
+        // --- 2. CONFIGURACIÓN DEL MAPA ---
+        const map = L.map('map', { scrollWheelZoom: false }).setView([16.733, -93.075], 14);
+        
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
 
-        // 1. Gráfico de Barras
+        // Paleta de Colores (Top 10)
+        const palette = {
+            "Comercio al por menor en tiendas de abarrotes, ultramarinos y misceláneas": "#ef4444", // Rojo
+            "Salones y clínicas de belleza y peluquerías": "#ec4899", // Rosa
+            "Asociaciones y organizaciones religiosas": "#8b5cf6", // Violeta
+            "Restaurantes con servicio de preparación de pizzas, hamburguesas, hot dogs y pollos rostizados para llevar": "#f97316", // Naranja
+            "Comercio al por menor de carne de aves": "#eab308", // Amarillo
+            "Reparación mecánica en general de automóviles y camiones": "#3b82f6", // Azul
+            "Restaurantes con servicio de preparación de tacos y tortas": "#f59e0b", // Ambar
+            "Elaboración de tortillas de maíz y molienda de nixtamal": "#84cc16", // Lima
+            "Restaurantes con servicio de preparación de antojitos": "#10b981", // Esmeralda
+            "Comercio al por menor de artículos de papelería": "#06b6d4" // Cian
+        };
+
+        // Etiquetas cortas para leyenda
+        const shortNames = {
+            "Comercio al por menor en tiendas de abarrotes, ultramarinos y misceláneas": "Abarrotes",
+            "Salones y clínicas de belleza y peluquerías": "Belleza / Peluquerías",
+            "Asociaciones y organizaciones religiosas": "Religiosas",
+            "Restaurantes con servicio de preparación de pizzas, hamburguesas, hot dogs y pollos rostizados para llevar": "Comida Rápida (Pollos/Pizzas)",
+            "Comercio al por menor de carne de aves": "Pollerías (Crudo)",
+            "Reparación mecánica en general de automóviles y camiones": "Mecánica Automotriz",
+            "Restaurantes con servicio de preparación de tacos y tortas": "Tacos y Tortas",
+            "Elaboración de tortillas de maíz y molienda de nixtamal": "Tortillerías",
+            "Restaurantes con servicio de preparación de antojitos": "Antojitos",
+            "Comercio al por menor de artículos de papelería": "Papelerías"
+        };
+
+        // Muestra de Puntos (Integrados directamente para rendimiento)
+        const mapPoints = [
+            {lat: 16.7341, lng: -93.0804, name: "ABARROTES SIN NOMBRE", type: "Comercio al por menor en tiendas de abarrotes, ultramarinos y misceláneas"},
+            {lat: 16.7343, lng: -93.0810, name: "ABARROTES GABY", type: "Comercio al por menor en tiendas de abarrotes, ultramarinos y misceláneas"},
+            {lat: 16.7321, lng: -93.0917, name: "ABARROTES ZEUS", type: "Comercio al por menor en tiendas de abarrotes, ultramarinos y misceláneas"},
+            {lat: 16.7293, lng: -93.0752, name: "ABARROTES SIN NOMBRE", type: "Comercio al por menor en tiendas de abarrotes, ultramarinos y misceláneas"},
+            {lat: 16.7298, lng: -93.0735, name: "ABARROTES LOHER", type: "Comercio al por menor en tiendas de abarrotes, ultramarinos y misceláneas"},
+            {lat: 16.7325, lng: -93.0723, name: "BARBER SHOP", type: "Salones y clínicas de belleza y peluquerías"},
+            {lat: 16.7381, lng: -93.0702, name: "ESTETICA LUNA AZUL", type: "Salones y clínicas de belleza y peluquerías"},
+            {lat: 16.7330, lng: -93.0901, name: "BARBERIA CABALLERO", type: "Salones y clínicas de belleza y peluquerías"},
+            {lat: 16.7337, lng: -93.0821, name: "CAPILLA JUSTO JUEZ", type: "Asociaciones y organizaciones religiosas"},
+            {lat: 16.7322, lng: -93.0742, name: "TEMPLO ADVENTISTA", type: "Asociaciones y organizaciones religiosas"},
+            {lat: 16.7263, lng: -93.0683, name: "FUENTE DE FE", type: "Asociaciones y organizaciones religiosas"},
+            {lat: 16.7304, lng: -93.0826, name: "VIGI BURGES", type: "Restaurantes con servicio de preparación de pizzas, hamburguesas, hot dogs y pollos rostizados para llevar"},
+            {lat: 16.7335, lng: -93.0766, name: "POLLO ASADO LA GUERA", type: "Restaurantes con servicio de preparación de pizzas, hamburguesas, hot dogs y pollos rostizados para llevar"},
+            {lat: 16.7375, lng: -93.0629, name: "POLLOS XIK", type: "Restaurantes con servicio de preparación de pizzas, hamburguesas, hot dogs y pollos rostizados para llevar"},
+            {lat: 16.7367, lng: -93.0650, name: "TORTILLERIA EL POZOL", type: "Elaboración de tortillas de maíz y molienda de nixtamal"},
+            {lat: 16.7322, lng: -93.0673, name: "TORTILLERIA ABRIL", type: "Elaboración de tortillas de maíz y molienda de nixtamal"},
+            {lat: 16.7374, lng: -93.0767, name: "TORTILLERIA 2001", type: "Elaboración de tortillas de maíz y molienda de nixtamal"},
+            {lat: 16.7289, lng: -93.0924, name: "TALLER MECANICO", type: "Reparación mecánica en general de automóviles y camiones"},
+            {lat: 16.7350, lng: -93.0850, name: "SERVICIO AUTOMOTRIZ", type: "Reparación mecánica en general de automóviles y camiones"},
+            {lat: 16.7331, lng: -93.0757, name: "PAPELERIA DANIELA", type: "Comercio al por menor de artículos de papelería"},
+            {lat: 16.7321, lng: -93.0949, name: "PAPELERIA SANTOS", type: "Comercio al por menor de artículos de papelería"},
+            {lat: 16.7342, lng: -93.0801, name: "CARNICERIA KICHAN", type: "Comercio al por menor de carnes rojas"}, // Ejemplo extra
+             {lat: 16.7346, lng: -93.0882, name: "VENTA DE AMBURGUESA", type: "Restaurantes con servicio de preparación de pizzas, hamburguesas, hot dogs y pollos rostizados para llevar"}
+        ];
+
+        // Añadir puntos al mapa
+        mapPoints.forEach(p => {
+            const color = palette[p.type] || '#94a3b8';
+            L.circleMarker([p.lat, p.lng], {
+                radius: 7, fillColor: color, color: "#fff", weight: 1.5, opacity: 1, fillOpacity: 0.8
+            }).bindPopup(`<div class="font-sans text-center"><strong class="block text-slate-800 text-sm">${p.name}</strong><span class="text-xs px-2 py-0.5 rounded text-white mt-1 inline-block" style="background:${color}">${shortNames[p.type] || 'Otro'}</span></div>`).addTo(map);
+        });
+
+        // Leyenda
+        const legend = L.control({position: 'bottomright'});
+        legend.onAdd = function (map) {
+            const div = L.DomUtil.create('div', 'legend');
+            div.innerHTML = '<strong class="block mb-2 text-slate-700">Top 10 Actividades</strong>';
+            for (const [key, value] of Object.entries(palette)) {
+                div.innerHTML += `<div class="flex items-center mb-1"><i style="background:${value}"></i><span class="text-slate-600">${shortNames[key]}</span></div>`;
+            }
+            return div;
+        };
+        legend.addTo(map);
+
+        // --- 3. CONFIGURACIÓN DE GRÁFICAS ---
+        Chart.defaults.font.family = "system-ui";
+        Chart.defaults.maintainAspectRatio = false;
+        Chart.defaults.color = '#64748b';
+
+        // Gráfica Colonias (Barras)
+        new Chart(document.getElementById('coloniasChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(stats.colonias),
+                datasets: [{
+                    label: 'Negocios', data: Object.values(stats.colonias),
+                    backgroundColor: ['#4f46e5', '#6366f1', '#818cf8', '#a5b4fc', '#c7d2fe'], borderRadius: 4
+                }]
+            },
+            options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+        });
+
+        // Gráfica Sectores (Dona)
+        new Chart(document.getElementById('sectorChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(stats.sectores),
+                datasets: [{
+                    data: Object.values(stats.sectores),
+                    backgroundColor: ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#94a3b8'], borderWidth: 0
+                }]
+            },
+            options: { cutout: '65%', plugins: { legend: { position: 'right', labels: { boxWidth: 10 } } } }
+        });
+
+        // Gráfica Actividades Top 10 (Barras Horizontales con colores del mapa)
         new Chart(document.getElementById('activitiesChart'), {
             type: 'bar',
             data: {
-                labels: Object.keys(data.activities),
+                labels: stats.actividadesLabels,
                 datasets: [{
-                    label: 'Negocios',
-                    data: Object.values(data.activities),
-                    backgroundColor: 'rgba(37, 99, 235, 0.7)',
-                    borderRadius: 4
+                    label: 'Cantidad', data: stats.actividadesData,
+                    backgroundColor: Object.values(palette), borderRadius: 4
                 }]
             },
-            options: {
-                indexAxis: 'y', // Barras horizontales
-                plugins: { legend: { display: false } }
+            options: { 
+                plugins: { legend: { display: false } },
+                scales: { x: { grid: { display: false } } }
             }
         });
 
-        // 2. Gráfico de Dona
+        // Gráfica Tamaño (Pie)
         new Chart(document.getElementById('sizeChart'), {
-            type: 'doughnut',
+            type: 'pie',
             data: {
-                labels: Object.keys(data.sizes),
+                labels: Object.keys(stats.tamano),
                 datasets: [{
-                    data: Object.values(data.sizes),
-                    backgroundColor: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'],
-                    borderWidth: 0
+                    data: Object.values(stats.tamano),
+                    backgroundColor: ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0'], borderWidth: 0
                 }]
             },
-            options: {
-                cutout: '70%',
-                plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } }
-            }
+            options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } } }
         });
 
-        // 3. Gráfico de Línea
-        const relevantYears = Object.entries(data.years).filter(([y, v]) => v > 50);
+        // Gráfica Histórico (Línea)
         new Chart(document.getElementById('yearChart'), {
             type: 'line',
             data: {
-                labels: relevantYears.map(k => k[0]),
+                labels: Object.keys(stats.historico),
                 datasets: [{
-                    label: 'Nuevos Registros',
-                    data: relevantYears.map(k => k[1]),
-                    borderColor: '#f97316',
-                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
-                    fill: true,
-                    tension: 0.3
+                    label: 'Nuevos Registros', data: Object.values(stats.historico),
+                    borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    fill: true, tension: 0.4, pointRadius: 4
                 }]
             },
-            options: {
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
-            }
+            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
         });
 
-        // --- MAPA ---
-        // Inicializar mapa asegurando que el contenedor existe
-        const map = L.map('map').setView([16.75, -93.10], 13);
-        
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: 'OpenStreetMap'
-        }).addTo(map);
-
-        // Icono simple
-        const icon = L.icon({
-            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41]
-        });
-
-        data.points.forEach(p => {
-            L.marker([p.lat, p.lng], {icon: icon})
-             .bindPopup(`<b style="font-size:14px">${p.title}</b>`)
-             .addTo(map);
-        });
-
-        // Forzar recalculo del tamaño del mapa después de cargar para evitar errores de gris
-        setTimeout(() => { map.invalidateSize(); }, 500);
+        // Ajuste final
+        setTimeout(() => map.invalidateSize(), 500);
 
     </script>
 </body>
