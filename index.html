@@ -3,263 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análisis DENUE - Tuxtla Responsive</title>
+    <title>Tablero Económico Estable</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <style>
-        /* Fuente más limpia */
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        
-        /* Personalización del scrollbar para que no estorbe en diseños compactos */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        body { font-family: -apple-system, system-ui, sans-serif; background-color: #f3f4f6; }
+        /* Corrección crítica: asegurar que los contenedores de gráficos no desborden */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden; /* Evita que el gráfico empuje el layout */
+        }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="p-4 md:p-8">
 
-    <div class="min-h-screen p-3 md:p-6 lg:p-8">
-
-        <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-            <div class="text-center md:text-left mb-4 md:mb-0">
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">Tablero Económico</h1>
-                <p class="text-sm text-gray-500 mt-1">Análisis DENUE: Tuxtla Gutiérrez y Zona Metro</p>
+    <div class="max-w-7xl mx-auto">
+        
+        <header class="bg-white rounded-lg shadow-sm p-6 mb-6 flex flex-col md:flex-row justify-between items-center border border-gray-200">
+            <div class="mb-4 md:mb-0 text-center md:text-left">
+                <h1 class="text-2xl font-bold text-gray-800">Tablero de Inteligencia Económica</h1>
+                <p class="text-gray-500 text-sm">Monitor de actividad empresarial DENUE</p>
             </div>
-            
-            <div class="flex items-center bg-blue-50 px-4 py-3 rounded-lg border border-blue-100">
-                <div class="bg-blue-600 rounded-full p-2 mr-3">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                </div>
-                <div>
-                    <span class="block text-xs font-semibold text-blue-800 uppercase tracking-wider">Total Unidades</span>
-                    <span class="text-xl md:text-2xl font-bold text-gray-900">9,761</span>
-                </div>
+            <div class="bg-blue-600 text-white px-5 py-2 rounded-full font-bold shadow-md">
+                9,761 Unidades
             </div>
         </header>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-blue-500 hover:shadow-md transition-shadow">
-                <p class="text-xs font-bold text-gray-400 uppercase">Giro Principal</p>
-                <p class="text-lg font-bold text-gray-800 mt-1 truncate">Abarrotes</p>
-                <div class="flex items-center mt-2 text-blue-600 text-sm">
-                    <span class="font-bold mr-1">17%</span> del total
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500">
+                <div class="text-gray-400 text-xs font-bold uppercase">Giro Principal</div>
+                <div class="text-xl font-bold text-gray-800">Abarrotes</div>
+                <div class="text-blue-600 text-xs mt-1">17% del mercado</div>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-green-500 hover:shadow-md transition-shadow">
-                <p class="text-xs font-bold text-gray-400 uppercase">Tamaño Dominante</p>
-                <p class="text-lg font-bold text-gray-800 mt-1">Micro (0-5)</p>
-                <div class="flex items-center mt-2 text-green-600 text-sm">
-                    <span class="font-bold mr-1">88.4%</span> de negocios
-                </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-green-500">
+                <div class="text-gray-400 text-xs font-bold uppercase">Tamaño</div>
+                <div class="text-xl font-bold text-gray-800">Micro (0-5)</div>
+                <div class="text-green-600 text-xs mt-1">88.4% predominancia</div>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-purple-500 hover:shadow-md transition-shadow">
-                <p class="text-xs font-bold text-gray-400 uppercase">Municipio Líder</p>
-                <p class="text-lg font-bold text-gray-800 mt-1">Tuxtla Gtz.</p>
-                <div class="flex items-center mt-2 text-purple-600 text-sm">
-                    <span class="font-bold mr-1">8,588</span> registros
-                </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-500">
+                <div class="text-gray-400 text-xs font-bold uppercase">Municipio</div>
+                <div class="text-xl font-bold text-gray-800">Tuxtla Gtz</div>
+                <div class="text-purple-600 text-xs mt-1">Zona Centro</div>
             </div>
-            <div class="bg-white p-4 rounded-xl shadow-sm border-l-4 border-orange-500 hover:shadow-md transition-shadow">
-                <p class="text-xs font-bold text-gray-400 uppercase">Actividad Reciente</p>
-                <p class="text-lg font-bold text-gray-800 mt-1">Pico en 2024</p>
-                <div class="flex items-center mt-2 text-orange-600 text-sm">
-                    <span class="font-bold mr-1">3,907</span> actualizaciones
-                </div>
+            <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-orange-500">
+                <div class="text-gray-400 text-xs font-bold uppercase">Actualización</div>
+                <div class="text-xl font-bold text-gray-800">2024</div>
+                <div class="text-orange-600 text-xs mt-1">Pico de registros</div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 lg:col-span-2 flex flex-col">
-                <h3 class="font-bold text-gray-700 mb-4 flex items-center">
-                    <span class="w-2 h-6 bg-blue-500 rounded mr-2"></span>
-                    Top 10 Actividades Económicas
-                </h3>
-                <div class="relative h-64 md:h-80 w-full">
+            <div class="bg-white p-5 rounded-lg shadow-sm lg:col-span-2 min-w-0">
+                <h3 class="font-bold text-gray-700 mb-4">Actividades Económicas (Top 10)</h3>
+                <div class="chart-container" style="height: 300px;">
                     <canvas id="activitiesChart"></canvas>
                 </div>
             </div>
-
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex flex-col">
-                <h3 class="font-bold text-gray-700 mb-4 flex items-center">
-                    <span class="w-2 h-6 bg-green-500 rounded mr-2"></span>
-                    Tamaño de Empresa
-                </h3>
-                <div class="relative h-56 md:h-64 w-full flex justify-center">
+            
+            <div class="bg-white p-5 rounded-lg shadow-sm min-w-0">
+                <h3 class="font-bold text-gray-700 mb-4">Tamaño de Negocios</h3>
+                <div class="chart-container" style="height: 300px;">
                     <canvas id="sizeChart"></canvas>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 lg:col-span-2">
-                <div class="flex justify-between items-end mb-4">
-                    <h3 class="font-bold text-gray-700 flex items-center">
-                        <span class="w-2 h-6 bg-indigo-500 rounded mr-2"></span>
-                        Distribución Geográfica
-                    </h3>
-                    <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">Muestra de puntos</span>
-                </div>
-                <div id="map" class="w-full h-[300px] md:h-[400px] rounded-lg z-0"></div>
+            <div class="bg-white p-5 rounded-lg shadow-sm lg:col-span-2 min-w-0">
+                <h3 class="font-bold text-gray-700 mb-4">Distribución Geográfica (Muestra)</h3>
+                <div id="map" style="height: 400px; width: 100%; border-radius: 0.5rem; z-index: 1;"></div>
             </div>
-
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <h3 class="font-bold text-gray-700 mb-4 flex items-center">
-                    <span class="w-2 h-6 bg-orange-500 rounded mr-2"></span>
-                    Crecimiento Histórico
-                </h3>
-                <div class="relative h-56 md:h-full min-h-[250px] w-full">
+            
+            <div class="bg-white p-5 rounded-lg shadow-sm min-w-0">
+                <h3 class="font-bold text-gray-700 mb-4">Histórico</h3>
+                <div class="chart-container" style="height: 400px;">
                     <canvas id="yearChart"></canvas>
                 </div>
             </div>
         </div>
-        
-        <footer class="mt-10 text-center text-gray-400 text-xs pb-4">
-            Generado con Inteligencia Artificial - Datos INEGI DENUE
-        </footer>
 
+        <footer class="mt-8 text-center text-gray-400 text-xs">
+            Datos procesados del INEGI DENUE
+        </footer>
     </div>
 
     <script>
-        // --- DATOS (Mismos que el paso anterior) ---
-        const stats = {
-            activities: {"Abarrotes y ultramarinos": 1656, "Salones de belleza": 385, "Frutas y verduras": 352, "Org. Religiosas": 294, "Mecánica automotriz": 264, "Restaurantes (Antojitos)": 230, "Tacos y tortas": 221, "Comercio carne aves": 181, "Pizzas/Hamburguesas": 176, "Otros alimentos": 175},
-            sizes: {"0 a 5": 8629, "6 a 10": 577, "11 a 30": 379, "31 a 50": 72, "Más de 51": 104},
+        // --- DATOS ESTÁTICOS ---
+        const data = {
+            activities: {"Abarrotes": 1656, "Belleza": 385, "Fruterías": 352, "Religiosas": 294, "Mecánica": 264, "Antojitos": 230, "Tacos/Tortas": 221, "Carne Aves": 181, "Comida Rápida": 176, "Alimentos": 175},
+            sizes: {"0-5 personas": 8629, "6-10 personas": 577, "11-30 personas": 379, "31-50 personas": 72, "51+ personas": 104},
             years: {"2010": 1974, "2014": 1092, "2019": 2192, "2023": 79, "2024": 3907, "2025": 262},
-            mapSample: [
-                {lat: 16.751, lng: -93.115, name: "COMERCIO LOCAL", type: "Comercio"},
-                {lat: 16.737, lng: -93.045, name: "ROMANCE AUTOPARTES", type: "Comercio"},
-                {lat: 16.730, lng: -93.038, name: "POLLOS ASADOS", type: "Alimentos"},
-                {lat: 16.735, lng: -93.111, name: "PACO CARNICERIAS", type: "Comercio"},
-                {lat: 16.751, lng: -93.056, name: "CERVECENTRO", type: "Bebidas"},
-                {lat: 16.748, lng: -93.044, name: "IGLESIA NAZARENO", type: "Religioso"},
-                {lat: 16.737, lng: -93.103, name: "A3P IMPERLLANTA", type: "Comercio"},
-                {lat: 16.744, lng: -93.081, name: "ESCUELA PRIMARIA", type: "Educación"},
-                {lat: 16.733, lng: -93.066, name: "CAPILLA SAN JUAN", type: "Religioso"},
-                {lat: 16.748, lng: -93.089, name: "MAZDA CHIAPAS", type: "Automotriz"},
-                {lat: 16.750, lng: -93.096, name: "FARMACIA GUADALAJARA", type: "Salud"},
-                {lat: 16.745, lng: -93.075, name: "BURGER KING AMBAR", type: "Alimentos"},
-                {lat: 16.722, lng: -93.107, name: "SAN LUCAS HOSPITAL", type: "Salud"},
-                {lat: 16.753, lng: -93.064, name: "ABARROTES SIN NOMBRE", type: "Comercio"},
-                {lat: 16.742, lng: -93.043, name: "NOVEDADES ELI", type: "Comercio"},
-                {lat: 16.740, lng: -93.093, name: "PRESTO CASH", type: "Servicios"},
-                {lat: 16.729, lng: -93.039, name: "MECANICA EL AGUILA", type: "Servicios"},
-                {lat: 16.750, lng: -93.093, name: "HSBC MEXICO", type: "Banca"},
-                {lat: 16.738, lng: -93.082, name: "COMIDAS DOÑA MARIA", type: "Alimentos"},
-                {lat: 16.742, lng: -93.061, name: "PAPELERIA TEXTUAL", type: "Comercio"}
+            points: [
+                {lat: 16.751, lng: -93.115, title: "Comercio"}, {lat: 16.737, lng: -93.045, title: "Autopartes"},
+                {lat: 16.730, lng: -93.038, title: "Alimentos"}, {lat: 16.735, lng: -93.111, title: "Carnicería"},
+                {lat: 16.751, lng: -93.056, title: "Depósito"}, {lat: 16.748, lng: -93.044, title: "Iglesia"},
+                {lat: 16.737, lng: -93.103, title: "Llantas"}, {lat: 16.744, lng: -93.081, title: "Escuela"},
+                {lat: 16.733, lng: -93.066, title: "Capilla"}, {lat: 16.748, lng: -93.089, title: "Automotriz"},
+                {lat: 16.750, lng: -93.096, title: "Farmacia"}, {lat: 16.745, lng: -93.075, title: "Burger King"},
+                {lat: 16.722, lng: -93.107, title: "Hospital"}, {lat: 16.753, lng: -93.064, title: "Abarrotes"},
+                {lat: 16.742, lng: -93.043, title: "Regalos"}, {lat: 16.740, lng: -93.093, title: "Empeño"},
+                {lat: 16.729, lng: -93.039, title: "Taller"}, {lat: 16.750, lng: -93.093, title: "Banco"},
+                {lat: 16.738, lng: -93.082, title: "Comedor"}, {lat: 16.742, lng: -93.061, title: "Papelería"}
             ]
         };
 
-        // --- CHART JS CONFIG ---
-        // Configuración común para que se vea bien en móvil
-        Chart.defaults.font.family = "'Segoe UI', 'Helvetica', 'Arial', sans-serif";
-        Chart.defaults.color = '#6B7280';
-        
-        // 1. Barras (Actividades)
+        // --- CONFIGURACIÓN SEGURA DE CHART.JS ---
+        // Desactivar animaciones de redimensionamiento excesivas
+        Chart.defaults.maintainAspectRatio = false; 
+        Chart.defaults.responsive = true;
+        Chart.defaults.font.family = '-apple-system, system-ui, sans-serif';
+
+        // 1. Gráfico de Barras
         new Chart(document.getElementById('activitiesChart'), {
             type: 'bar',
             data: {
-                labels: Object.keys(stats.activities),
+                labels: Object.keys(data.activities),
                 datasets: [{
-                    label: 'Unidades',
-                    data: Object.values(stats.activities),
-                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                    borderRadius: 4,
-                    barThickness: 'flex' 
+                    label: 'Negocios',
+                    data: Object.values(data.activities),
+                    backgroundColor: 'rgba(37, 99, 235, 0.7)',
+                    borderRadius: 4
                 }]
             },
             options: {
-                indexAxis: 'y', // Barras horizontales son mejores para leer nombres largos en móvil
-                maintainAspectRatio: false, // CLAVE para responsividad
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { grid: { display: false } },
-                    y: { grid: { borderDash: [2, 4] } }
-                }
+                indexAxis: 'y', // Barras horizontales
+                plugins: { legend: { display: false } }
             }
         });
 
-        // 2. Pie (Tamaño)
+        // 2. Gráfico de Dona
         new Chart(document.getElementById('sizeChart'), {
             type: 'doughnut',
             data: {
-                labels: Object.keys(stats.sizes),
+                labels: Object.keys(data.sizes),
                 datasets: [{
-                    data: Object.values(stats.sizes),
+                    data: Object.values(data.sizes),
                     backgroundColor: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'],
                     borderWidth: 0
                 }]
             },
             options: {
-                maintainAspectRatio: false,
-                plugins: { 
-                    legend: { 
-                        position: 'bottom',
-                        labels: { boxWidth: 12, font: { size: 11 } }
-                    } 
-                },
-                cutout: '70%'
+                cutout: '70%',
+                plugins: { legend: { position: 'bottom', labels: { boxWidth: 10 } } }
             }
         });
 
-        // 3. Línea (Histórico)
-        const relevantYears = Object.entries(stats.years).filter(([y, v]) => v > 50);
+        // 3. Gráfico de Línea
+        const relevantYears = Object.entries(data.years).filter(([y, v]) => v > 50);
         new Chart(document.getElementById('yearChart'), {
             type: 'line',
             data: {
-                labels: relevantYears.map(d => d[0]),
+                labels: relevantYears.map(k => k[0]),
                 datasets: [{
-                    label: 'Registros',
-                    data: relevantYears.map(d => d[1]),
-                    borderColor: '#F97316',
+                    label: 'Nuevos Registros',
+                    data: relevantYears.map(k => k[1]),
+                    borderColor: '#f97316',
                     backgroundColor: 'rgba(249, 115, 22, 0.1)',
                     fill: true,
-                    tension: 0.4,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#F97316',
-                    pointBorderWidth: 2
+                    tension: 0.3
                 }]
             },
             options: {
-                maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
-                    x: { grid: { display: false } }
-                }
+                scales: { y: { beginAtZero: true } }
             }
         });
 
-        // --- MAPA LEAFLET ---
-        const map = L.map('map', { scrollWheelZoom: false }).setView([16.75, -93.10], 13);
+        // --- MAPA ---
+        // Inicializar mapa asegurando que el contenedor existe
+        const map = L.map('map').setView([16.75, -93.10], 13);
         
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap'
+            attribution: 'OpenStreetMap'
         }).addTo(map);
 
-        const markerIcon = L.icon({
+        // Icono simple
+        const icon = L.icon({
             iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
             shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-            shadowSize: [41, 41]
+            iconSize: [25, 41],
+            iconAnchor: [12, 41]
         });
 
-        stats.mapSample.forEach(point => {
-            L.marker([point.lat, point.lng], {icon: markerIcon})
-                .addTo(map)
-                .bindPopup(`
-                    <div class="text-center">
-                        <strong class="block text-gray-800">${point.name}</strong>
-                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded mt-1 inline-block">${point.type}</span>
-                    </div>
-                `);
+        data.points.forEach(p => {
+            L.marker([p.lat, p.lng], {icon: icon})
+             .bindPopup(`<b style="font-size:14px">${p.title}</b>`)
+             .addTo(map);
         });
+
+        // Forzar recalculo del tamaño del mapa después de cargar para evitar errores de gris
+        setTimeout(() => { map.invalidateSize(); }, 500);
+
     </script>
 </body>
 </html>
